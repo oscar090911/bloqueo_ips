@@ -13,6 +13,9 @@ YELLOW='\e[1;33m'
 CYAN='\e[1;36m'
 NC='\e[0m' # No Color
 
+# URL del archivo en GitHub (usando raw.githubusercontent.com)
+GITHUB_RAW_URL="https://raw.githubusercontent.com/oscar090911/bloqueo_ips/main/bloqueo_ips.txt"
+
 # Función para verificar si un comando existe
 command_exists() {
     command -v "$1" >/dev/null 2>&1
@@ -41,11 +44,12 @@ fi
 # Si llegamos aquí, no hay Fail2Ban - proceder con iptables
 echo -e "${GREEN}Fail2Ban no detectado, procediendo con bloqueo via iptables/ipset...${NC}"
 
-# Descargar lista de IPs
-echo -e "${CYAN}Descargando lista de IPs a bloquear...${NC}"
-wget -q -O /root/bloqueo_ips.txt http://212.227.163.77/list/bloqueo_ips.txt
+# Descargar lista de IPs desde GitHub
+echo -e "${CYAN}Descargando lista de IPs desde GitHub...${NC}"
+wget -q -O /root/bloqueo_ips.txt "$GITHUB_RAW_URL"
 if [ $? -ne 0 ]; then
-    echo -e "${RED}Error al descargar el archivo de IPs${NC}"
+    echo -e "${RED}Error al descargar el archivo de IPs desde GitHub${NC}"
+    echo -e "${YELLOW}URL utilizada: $GITHUB_RAW_URL${NC}"
     exit 1
 fi
 
